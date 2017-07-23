@@ -9,14 +9,36 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    @IBOutlet weak var display: UILabel?
+    
+    var userIsTypingANumber = false
+    
     @IBAction func touchDigit(_ sender: UIButton) {
-        if let digit = sender.currentTitle{
-            print("\(digit) was pressed")
+        let digit = sender.currentTitle!
+        if userIsTypingANumber {
+            let textCurrentlyInDisplay = display!.text!
+            display!.text = textCurrentlyInDisplay + digit
+        } else {
+            display!.text = digit
+            userIsTypingANumber = true
         }
+        
         
     }
     
+    @IBAction func performOperation(_ sender: UIButton) {
+        userIsTypingANumber = false
+        if let mathematicalSymbol = sender.currentTitle {
+            switch mathematicalSymbol {
+            case "π":
+                display!.text = String(Double.pi)
+            default:
+                break
+            }
+        }
+    }
 
 }
+
 
