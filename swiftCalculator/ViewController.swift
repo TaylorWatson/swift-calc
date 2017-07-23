@@ -10,35 +10,47 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var display: UILabel?
-    
+    @IBOutlet weak var numberDisplay: UILabel!
     var userIsTypingANumber = false
     
+    var displayNumberValue: Double {
+        get {
+            return Double(numberDisplay.text!)!
+        }
+        set {
+            numberDisplay.text = String(newValue)
+        }
+    }
+    
     @IBAction func touchDigit(_ sender: UIButton) {
-        let digit = sender.currentTitle!
         if userIsTypingANumber {
-            let textCurrentlyInDisplay = display!.text!
-            display!.text = textCurrentlyInDisplay + digit
+            numberDisplay.text = numberDisplay.text! + sender.currentTitle!
         } else {
-            display!.text = digit
+            numberDisplay.text = sender.currentTitle!
             userIsTypingANumber = true
         }
         
         
     }
     
+    private var calculator = CalculatorModel()
+    
     @IBAction func performOperation(_ sender: UIButton) {
+        if userIsTypingANumber {
+            calculator.setDisplayValue(displayNumberValue)
+        }
         userIsTypingANumber = false
         if let mathematicalSymbol = sender.currentTitle {
-            switch mathematicalSymbol {
-            case "π":
-                display!.text = String(Double.pi)
-            default:
-                break
-            }
+            calculator.performOperation(mathematicalSymbol)
         }
+        
     }
 
+    
+    
+    
+    
+    
 }
 
 
