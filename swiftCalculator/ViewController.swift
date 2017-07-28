@@ -18,15 +18,18 @@ class ViewController: UIViewController {
             return Double(numberDisplay.text!)!
         }
         set {
-            numberDisplay.text = String(newValue)
+            numberDisplay.text = String(newValue).truncate(length: 10, trailing: "")
         }
     }
     
+    
     @IBAction func touchDigit(_ sender: UIButton) {
         if userIsTypingANumber {
-            numberDisplay.text = numberDisplay.text! + sender.currentTitle!
+            if numberDisplay.text!.count < 10 {
+                numberDisplay.text = numberDisplay.text! + sender.currentTitle!
+            }
         } else {
-            numberDisplay.text = sender.currentTitle!
+            numberDisplay.text = sender.currentTitle!.truncate(length: 10, trailing: "")
             userIsTypingANumber = true
         }
         
@@ -43,9 +46,11 @@ class ViewController: UIViewController {
         if let mathematicalSymbol = sender.currentTitle {
             calculator.performOperation(mathematicalSymbol)
         }
-        
+        if let result = calculator.result {
+            displayNumberValue = result
+        }
     }
-
+    
     
     
     
@@ -53,4 +58,14 @@ class ViewController: UIViewController {
     
 }
 
+extension String {
+    func truncate(length: Int, trailing: String = "") -> String {
+        if self.characters.count > length {
+            return String(self.characters.prefix(length)) + trailing
+        } else {
+            return self
+        }
+    }
+    
+}
 
