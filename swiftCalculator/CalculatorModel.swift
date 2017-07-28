@@ -17,7 +17,6 @@ struct CalculatorModel {
         case unary((Double) -> Double)
         case binary((Double, Double) -> Double)
         case equals
-        case clear
     }
     
     private var pendingBinaryOperation: PendingBinaryOperation?
@@ -50,8 +49,7 @@ struct CalculatorModel {
         "÷" : Operation.binary({ $0 / $1 }),
         "+" : Operation.binary({ $0 + $1 }),
         "-" : Operation.binary({ $0 - $1 }),
-        "=" : Operation.equals,
-        "C" : Operation.clear
+        "=" : Operation.equals
     ]
     
     var result: Double? {
@@ -76,10 +74,12 @@ struct CalculatorModel {
                 }
             case .equals:
                 performPendingBinaryOperation()
-            case .clear:
-                accumulator = nil
             }
         }
+    }
+    
+    mutating func clearCalculator() {
+        accumulator = 0
     }
     
     mutating func setDisplayValue(_ displayValue: Double) {
@@ -89,4 +89,5 @@ struct CalculatorModel {
     
     
 }
+
 

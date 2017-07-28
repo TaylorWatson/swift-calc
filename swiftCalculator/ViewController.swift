@@ -12,24 +12,25 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var numberDisplay: UILabel!
     var userIsTypingANumber = false
+    var displayStringLength = 11
     
     var displayNumberValue: Double {
         get {
             return Double(numberDisplay.text!)!
         }
         set {
-            numberDisplay.text = String(newValue).truncate(length: 10, trailing: "")
+            numberDisplay.text = String(newValue).truncate(length: displayStringLength, trailing: "")
         }
     }
     
     
     @IBAction func touchDigit(_ sender: UIButton) {
         if userIsTypingANumber {
-            if numberDisplay.text!.count < 10 {
+            if numberDisplay.text!.count < displayStringLength {
                 numberDisplay.text = numberDisplay.text! + sender.currentTitle!
             }
         } else {
-            numberDisplay.text = sender.currentTitle!.truncate(length: 10, trailing: "")
+            numberDisplay.text = sender.currentTitle!.truncate(length: displayStringLength, trailing: "")
             userIsTypingANumber = true
         }
         
@@ -37,6 +38,11 @@ class ViewController: UIViewController {
     }
     
     private var calculator = CalculatorModel()
+    
+    @IBAction func touchClear(_ sender: UIButton) {
+        calculator.clearCalculator()
+        displayNumberValue = calculator.result!
+    }
     
     @IBAction func performOperation(_ sender: UIButton) {
         if userIsTypingANumber {
