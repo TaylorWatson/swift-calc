@@ -13,8 +13,6 @@ struct CalculatorModel {
     
     private var accumulator: Double?
     var descriptionAccumulator: String?
-    var oldAccumulator: Double?
-    var isOldAccumulatorSet: Bool?
     var operationHasChanged: Bool?
     var oldSymbol: String?
     
@@ -34,12 +32,18 @@ struct CalculatorModel {
     
     private var pending: PendingBinaryOperationInfo?
     
-   
+    var ResultIsPending : Bool {
+        get {
+            return pending != nil ? true : false
+        }
+    }
+    
+    
     private mutating func addToPendingBinaryOperation() {
         if descriptionAccumulator != nil {
-            descriptionAccumulator = pending!.descriptionFunction(pending!.firstDescription, String(oldAccumulator!))
+            descriptionAccumulator = pending!.descriptionFunction(pending!.firstDescription, String(accumulator!))
         }
-        accumulator = pending!.binaryFunction(pending!.firstOperand, oldAccumulator!)
+        accumulator = pending!.binaryFunction(pending!.firstOperand, accumulator!)
     }
     
     
@@ -47,7 +51,6 @@ struct CalculatorModel {
         if descriptionAccumulator != nil {
             descriptionAccumulator = pending!.descriptionFunction(pending!.firstDescription, String(accumulator!))
         }
-        isOldAccumulatorSet = nil
         accumulator = pending!.binaryFunction(pending!.firstOperand, accumulator!)
     }
     
@@ -119,33 +122,17 @@ struct CalculatorModel {
                 // should be working fine.
                 
             case .binary(let function, let descriptionFunction):
-               /*
-                 if oldSymbol == nil {
-                    oldSymbol = symbol
-                } else if oldSymbol != symbol {
-                    operationHasChanged = true
-                }
-               */
-                // if != nil means someone has hit a binary button again. EG: 5 + 5 + ...
-                if pending != nil {
-                    if isOldAccumulatorSet == nil {
-                        oldAccumulator = accumulator
-                        isOldAccumulatorSet = true
-                    }
-                    // if operationHasChanged skip func. EG: 5 + 5 - ...
-                    if operationHasChanged == nil {
-                        addToPendingBinaryOperation()
-                    }
-                }
-                if accumulator != nil {
+                ResultIsPending ? addToPendingBinaryOperation() : nil
+                if accumulator != nil
+                {
                     pending = PendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator!, firstDescription:  String(accumulator!), descriptionFunction: descriptionFunction)
                 }
-                
+               
             case .equals:
-                if pending != nil {
+                if ResultIsPending {
                     executePendingBinaryOperation()
+                    pending = nil
                 }
-                pending = nil
             }
         }
     }
