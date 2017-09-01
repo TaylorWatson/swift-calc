@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		340F57881F2BF6E100E01A81 /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340F57871F2BF6E100E01A81 /* RoundButton.swift */; };
+		340F578A1F2BFAAC00E01A81 /* RoundLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340F57891F2BFAAC00E01A81 /* RoundLabel.swift */; };
 		345D56161F24297C00022611 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345D56151F24297C00022611 /* AppDelegate.swift */; };
 		345D56181F24297C00022611 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345D56171F24297C00022611 /* ViewController.swift */; };
 		345D561B1F24297C00022611 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 345D56191F24297C00022611 /* Main.storyboard */; };
@@ -17,13 +19,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		340F57871F2BF6E100E01A81 /* RoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
+		340F57891F2BFAAC00E01A81 /* RoundLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundLabel.swift; sourceTree = "<group>"; };
 		345D56121F24297C00022611 /* swiftCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = swiftCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		345D56151F24297C00022611 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		345D56171F24297C00022611 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		345D561A1F24297C00022611 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		345D561C1F24297C00022611 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		345D561F1F24297C00022611 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		345D56211F24297C00022611 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		345D56211F24297C00022611 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = "Supporting Files/Info.plist"; sourceTree = "<group>"; };
 		345D56291F242AD000022611 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		345D562B1F243DCE00022611 /* CalculatorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -62,6 +66,7 @@
 				345D56171F24297C00022611 /* ViewController.swift */,
 				345D562B1F243DCE00022611 /* CalculatorModel.swift */,
 				345D56191F24297C00022611 /* Main.storyboard */,
+				345D56211F24297C00022611 /* Info.plist */,
 				345D56271F242A1300022611 /* Supporting Files */,
 			);
 			path = swiftCalculator;
@@ -70,10 +75,11 @@
 		345D56271F242A1300022611 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				340F57871F2BF6E100E01A81 /* RoundButton.swift */,
 				345D56151F24297C00022611 /* AppDelegate.swift */,
 				345D561C1F24297C00022611 /* Assets.xcassets */,
 				345D561E1F24297C00022611 /* LaunchScreen.storyboard */,
-				345D56211F24297C00022611 /* Info.plist */,
+				340F57891F2BFAAC00E01A81 /* RoundLabel.swift */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -150,8 +156,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				340F57881F2BF6E100E01A81 /* RoundButton.swift in Sources */,
 				345D562C1F243DCE00022611 /* CalculatorModel.swift in Sources */,
 				345D56181F24297C00022611 /* ViewController.swift in Sources */,
+				340F578A1F2BFAAC00E01A81 /* RoundLabel.swift in Sources */,
 				345D56161F24297C00022611 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -333,6 +341,7 @@
 				345D56261F24297C00022611 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -8,43 +8,69 @@
 
 import UIKit
 
+
 class ViewController: UIViewController {
     
     @IBOutlet weak var numberDisplay: UILabel!
+    @IBOutlet weak var descriptionDisplay: UILabel!
+    //is the user in the middle of typing
     var userIsTypingANumber = false
-    var displayStringLength = 11
+    //how many chars before numberDisplay stops typing
+    let displayStringLength = 11
+    
+    var displayDescriptionValue: String {
+        get{
+            return descriptionDisplay.text!
+        }
+        set {
+            descriptionDisplay.text = String(newValue)
+        }
+    }
     
     var displayNumberValue: Double {
         get {
             return Double(numberDisplay.text!)!
         }
         set {
-            numberDisplay.text = String(newValue).truncate(length: displayStringLength, trailing: "")
+            numberDisplay.text = calculator.formatNumber(newValue)
         }
     }
     
     
     @IBAction func touchDigit(_ sender: UIButton) {
+        buttonBounce(sender)
+        let digit = sender.currentTitle!
         if userIsTypingANumber {
-            if numberDisplay.text!.count < displayStringLength {
-                numberDisplay.text = numberDisplay.text! + sender.currentTitle!
+            if (digit == ".") && ((numberDisplay.text!.range(of: ".") != nil)) {
+                return
             }
+            let textCurrentlyInDisplay = numberDisplay.text!
+            numberDisplay.text = textCurrentlyInDisplay + digit
         } else {
-            numberDisplay.text = sender.currentTitle!.truncate(length: displayStringLength, trailing: "")
+            if digit == "." {
+                numberDisplay.text = "0."
+            }  else {
+                numberDisplay.text = digit
+            }
             userIsTypingANumber = true
         }
-        
-        
+  
+    }
+    
+    
+    
+    // clear the calculator
+    @IBAction func touchClear(_ sender: UIButton) {
+        buttonBounce(sender)
+        calculator.clearCalculator()
+        displayNumberValue = 0
+        displayDescriptionValue = ""
     }
     
     private var calculator = CalculatorModel()
     
-    @IBAction func touchClear(_ sender: UIButton) {
-        calculator.clearCalculator()
-        displayNumberValue = calculator.result!
-    }
-    
     @IBAction func performOperation(_ sender: UIButton) {
+        buttonBounce(sender)
         if userIsTypingANumber {
             calculator.setDisplayValue(displayNumberValue)
         }
@@ -55,23 +81,27 @@ class ViewController: UIViewController {
         if let result = calculator.result {
             displayNumberValue = result
         }
-    }
-    
-    
-    
-    
-    
-    
-}
-
-extension String {
-    func truncate(length: Int, trailing: String = "") -> String {
-        if self.characters.count > length {
-            return String(self.characters.prefix(length)) + trailing
-        } else {
-            return self
+        if let description = calculator.descriptionResult {
+            displayDescriptionValue = description
         }
     }
     
+    
+    
+    func buttonBounce(_ sender: UIButton) {
+        sender.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
+        
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       usingSpringWithDamping: CGFloat(0.30),
+                       initialSpringVelocity: CGFloat(3.0),
+                       options: UIViewAnimationOptions.allowUserInteraction,
+                       animations: {
+                        sender.transform = CGAffineTransform.identity
+        },
+                       completion: { Void in()  }
+        )
+    }
+    
+    
 }
-
