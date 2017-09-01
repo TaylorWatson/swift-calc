@@ -13,14 +13,14 @@ struct CalculatorModel {
     
     private var accumulator: Double?
     var descriptionAccumulator: String?
-    var operationHasChanged: Bool?
-    var oldSymbol: String?
+    var runningDescriptionAccumulator: String?
     
     private struct PendingBinaryOperationInfo {
         var binaryFunction: (Double, Double) -> Double
         var firstOperand: Double
         var firstDescription: String
         var descriptionFunction: (String, String) -> String
+        
         
         func perform(with secondOperand: Double) -> Double {
             return binaryFunction(firstOperand, secondOperand)
@@ -32,16 +32,23 @@ struct CalculatorModel {
     
     private var pending: PendingBinaryOperationInfo?
     
-    var ResultIsPending : Bool {
+    // Calculated Properties
+    
+    var resultIsPending : Bool {
         get {
             return pending != nil ? true : false
         }
     }
     
+    var equalOrEllipsis: String? {
+        get {
+            return resultIsPending ? " ..." : " ="
+        }
+    }
     
     private mutating func addToPendingBinaryOperation() {
         if descriptionAccumulator != nil {
-            descriptionAccumulator = pending!.descriptionFunction(pending!.firstDescription, String(accumulator!))
+            runningDescriptionAccumulator = pending!.descriptionFunction(pending!.firstDescription, String(accumulator!))
         }
         accumulator = pending!.binaryFunction(pending!.firstOperand, accumulator!)
     }
@@ -50,6 +57,7 @@ struct CalculatorModel {
     mutating func executePendingBinaryOperation() {
         if descriptionAccumulator != nil {
             descriptionAccumulator = pending!.descriptionFunction(pending!.firstDescription, String(accumulator!))
+            
         }
         accumulator = pending!.binaryFunction(pending!.firstOperand, accumulator!)
     }
@@ -77,7 +85,7 @@ struct CalculatorModel {
         "cos" : Operation.unary(cos, { "cos \($0)" }),
         "±" : Operation.unary({ -$0 }, { "-\($0)" }),
         "+10%" : Operation.unary({ $0 * 1.1 }, { "\($0) + 10%" }),
-        "-10%" : Operation.unary({ $0 * 0.9 }, { "\($0) - 10%" }),
+        "SqYd%" : Operation.unary({ $0 / 9 }, { "\($0) / 9" }),
         "Tax" : Operation.unary({ $0 * 1.13 }, { "\($0) + 13%" }),
         "﹪" : Operation.unary({ $0 / 100 }, { "\($0) / 100" }),
         "×" : Operation.binary({ $0 * $1 }, { "\($0) × \($1)" }),
@@ -106,32 +114,28 @@ struct CalculatorModel {
             case .constant(let accumulatorValue, let descriptionValue):
                 // rounding constant values to 4 decimal places
                 accumulator = Double(floor(10000*accumulatorValue)/10000)
-                descriptionAccumulator = descriptionValue
-                // should be working fine.
+                descriptionAccumulator = resultIsPending ? pending!.performDescription(with: descriptionValue) + equalOrEllipsis! : descriptionValue
                 
             case .unary(let function, let descriptionFunction):
                 if accumulator != nil {
-                    if descriptionAccumulator != nil {
-                        descriptionAccumulator = descriptionFunction(descriptionAccumulator!)
-                    } else {
-                        descriptionAccumulator = descriptionFunction(String(accumulator!))
-                    }
+                    descriptionAccumulator = resultIsPending ? pending!.performDescription(with: descriptionFunction(descriptionAccumulator!)) + equalOrEllipsis! : descriptionFunction(descriptionAccumulator!)
                     //rounding unary operation result to 5 decimal places
                     accumulator = Double(floor(100000*function(accumulator!))/100000)
                 }
-                // should be working fine.
                 
             case .binary(let function, let descriptionFunction):
-                ResultIsPending ? addToPendingBinaryOperation() : nil
+                resultIsPending ? addToPendingBinaryOperation() : nil
                 if accumulator != nil
                 {
-                    pending = PendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator!, firstDescription:  String(accumulator!), descriptionFunction: descriptionFunction)
+                    pending = PendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator!, firstDescription: resultIsPending ? runningDescriptionAccumulator! : String(accumulator!), descriptionFunction: descriptionFunction)
+                    descriptionAccumulator = pending!.performDescription(with: equalOrEllipsis!)
                 }
                
             case .equals:
-                if ResultIsPending {
+                if resultIsPending {
                     executePendingBinaryOperation()
                     pending = nil
+                    descriptionAccumulator = descriptionAccumulator! + equalOrEllipsis!
                 }
             }
         }

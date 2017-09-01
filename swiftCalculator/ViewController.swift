@@ -65,6 +65,7 @@ class ViewController: UIViewController {
         calculator.clearCalculator()
         displayNumberValue = 0
         displayDescriptionValue = ""
+        userIsTypingANumber = false
     }
     
     private var calculator = CalculatorModel()
