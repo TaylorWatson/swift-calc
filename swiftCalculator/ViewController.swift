@@ -41,19 +41,14 @@ class ViewController: UIViewController {
         buttonBounce(sender)
         let digit = sender.currentTitle!
         if userIsTypingANumber {
-            if (digit == ".") && ((numberDisplay.text!.range(of: ".") != nil)) {
-                return
-            }
             let textCurrentlyInDisplay = numberDisplay.text!
-            numberDisplay.text = textCurrentlyInDisplay + digit
-        } else {
-            if digit == "." {
-                numberDisplay.text = "0."
-            }  else {
-                numberDisplay.text = digit
+            if digit != "." || !numberDisplay.text!.contains(".") {
+                numberDisplay.text = textCurrentlyInDisplay + digit
+                }
+            } else {
+                numberDisplay.text = "." == digit ? "0." : digit
+                userIsTypingANumber = true
             }
-            userIsTypingANumber = true
-        }
   
     }
     

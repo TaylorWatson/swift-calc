@@ -77,6 +77,7 @@ struct CalculatorModel {
         case unary((Double) -> Double, (String) -> String)
         case binary((Double, Double) -> Double, (String, String) -> String)
         case equals
+        case backspace
     }
     
     private var operations: Dictionary<String,Operation> = [
@@ -93,7 +94,8 @@ struct CalculatorModel {
         "÷" : Operation.binary({ $0 / $1 }, { "\($0) ÷ \($1)" }),
         "+" : Operation.binary({ $0 + $1 }, { "\($0) + \($1)" }),
         "-" : Operation.binary({ $0 - $1 }, { "\($0) - \($1)" }),
-        "=" : Operation.equals
+        "=" : Operation.equals,
+        "⌫" : Operation.backspace
     ]
     
     var result: Double? {
@@ -140,6 +142,10 @@ struct CalculatorModel {
                     executePendingBinaryOperation()
                     pending = nil
                     descriptionAccumulator = descriptionAccumulator! + equalOrEllipsis!
+                }
+            case .backspace:
+                if let accumulatorString = accumulator {
+                    accumulatorString
                 }
             } 
         }

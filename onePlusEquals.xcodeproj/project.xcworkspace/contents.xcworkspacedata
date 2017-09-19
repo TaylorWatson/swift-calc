@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:swiftCalculator.xcodeproj">
+      location = "self:/Users/taylor/Documents/_/iOS Apps/swiftCalculator/onePlusEquals.xcodeproj">
    </FileRef>
 </Workspace>
