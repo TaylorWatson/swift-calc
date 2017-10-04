@@ -11,7 +11,7 @@ import Foundation
 struct CalculatorModel {
     
     
-    private var accumulator: Double?
+    private var accumulator: (Double, String)?
     var descriptionAccumulator: String?
     var runningDescriptionAccumulator: String?
     var unaryOpSymbolInDescription : Bool?
@@ -37,7 +37,7 @@ struct CalculatorModel {
     
     var resultIsPending : Bool {
         get {
-            return pending != nil ? true : false
+            return pending != nil
         }
     }
     
@@ -86,7 +86,7 @@ struct CalculatorModel {
         "√" : Operation.unary(sqrt, { "√(\($0))" }),
         "cos" : Operation.unary(cos, { "cos \($0)" }),
         "±" : Operation.unary({ -$0 }, { "-\($0)" }),
-        "+10%" : Operation.unary({ $0 * 1.1 }, { "\($0) + 10%" }),
+        "10%" : Operation.unary({ $0 * 1.1 }, { "\($0) + 10%" }),
         "SqYd" : Operation.unary({ $0 / 9 }, { "\($0) SqYds" }),
         "Tax" : Operation.unary({ $0 * 1.13 }, { "\($0) + 13%" }),
         "﹪" : Operation.unary({ $0 / 100 }, { "\($0) / 100" }),
@@ -114,19 +114,14 @@ struct CalculatorModel {
         if let operation = operations[symbol] {
             switch operation {
         
-            case .constant(let accumulatorValue, let descriptionValue):
+            case .constant(let accumulatorValue):
                 // rounding constant values to 4 decimal places
-                accumulator = Double(floor(10000*accumulatorValue)/10000)
-                descriptionAccumulator = resultIsPending ? pending!.performDescription(with: descriptionValue) + equalOrEllipsis! : descriptionValue
-                unaryOpSymbolInDescription = true
+                accumulator = (value, symbol)
                 
             case .unary(let function, let descriptionFunction):
                 if accumulator != nil {
-                    descriptionAccumulator = resultIsPending ? pending!.performDescription(with: descriptionFunction(descriptionAccumulator!)) + equalOrEllipsis! : descriptionFunction(descriptionAccumulator!)
-                    //rounding unary operation result to 5 decimal places
-                    accumulator = Double(floor(100000*function(accumulator!))/100000)
+                    accumulator = (function(accumulator!.0), descriptionFunction(accumulator!.1))
                 }
-                unaryOpSymbolInDescription = true
                 
             case .binary(let function, let descriptionFunction):
                 resultIsPending ? addToPendingBinaryOperation() : nil
